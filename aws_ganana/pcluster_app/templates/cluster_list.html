@@ -1,0 +1,57 @@
+<!-- cluster_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    {% include 'header.html' %}
+    <title>Cluster List</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Optional: Add CSS for styling -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <h1 style="color:#167da7">Clusters Data</h1><br>
+    <div class="row">
+        <div class="col-md-11">
+                <table  class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Cluster Name</th>
+                        <th>Region</th>
+                        <th>VPC</th>
+
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cluster in clusters %}
+                    <tr>
+                        <td><a href="{% url 'cluster_detail' cluster.clustername %}">{{ cluster.clustername }}</a></td>
+                        <td>{{ cluster.region }}</td>
+                        <td>{{ cluster.vpc }}</td>
+
+<!--                       <td><a href="{{ cluster.url }}" target="_blank">{{ cluster.url }}</a></td>-->
+                        <td><a href="{% url 'update' cluster.clustername %}" class="btn btn-default btn-sm"><i class="bi bi-pencil"></i></a>
+                            <a href="{% url 'delete' cluster.clustername %}" class="btn btn-default btn-sm"><i class="bi bi-trash"></i></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2">No clusters found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+    </div>
+
+</div>
+
+
+
+</body>
+</html>

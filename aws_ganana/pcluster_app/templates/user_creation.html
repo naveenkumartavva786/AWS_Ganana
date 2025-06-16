@@ -1,0 +1,51 @@
+{% include 'header.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        /* Your existing styles here */
+
+        /* Additional styling for the new fields */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align: center; color:#45B08C;">User Creation</h2>
+    {% if messages %}
+        <ul class="messages" style="color: green;">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <div><br>
+        <a href="{% url 'group_creation' %}" style="margin-left:900px;">Add New Group</a>
+        <form method="post" action="{% url 'group_creation' %}" style="width:50%;margin:auto;">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="btn btn-primary" style="background-color:#45B08C;border:#45B08C;">Create</button>
+        </form>
+    </div>
+</body>
+</html>
+{% include 'footer.html' %}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Log File</title>
+    {% include 'header.html' %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .log-container {
+            background-color: #f4f4f4;
+            padding: 0px;
+            border-radius: 5px;
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+        .log-entry {
+            white-space: pre-line;
+            font-family: monospace;
+            margin-left: 20px;
+            line-height: 0.9;
+        }
+        .timestamp {
+            font-weight: bold;
+        }
+        .cluster-select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        .cluster-select:hover {
+            background-color: #eee;
+        }
+        .cluster-select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        .cluster-select-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 300px;
+        }
+    </style>
+    <script>
+        function redirectToLog(clusterName) {
+            if (clusterName) {
+                window.location.href = `{% url 'show_logs' 'PLACEHOLDER' %}`.replace('PLACEHOLDER', clusterName);
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+<div class="row">
+    <div class="col-md-6">
+<!--        <h1 style="color:#167da7">Cluster Creation Logs</h1>-->
+        <h3 style="color:#7c7c7c">You Can See Logs For <span style="color:#348c90">{{cluster_name}} </span></h3>
+    </div>
+
+    <div class="col-md-6">
+        <div class="cluster-select-container">
+            <select class="form-select cluster-select" aria-label="Default select example" onchange="redirectToLog(this.value)">
+                <option value="">-- Select a Cluster --</option>
+                {% for cluster in clusters %}
+                    <!-- Add the "selected" attribute if this cluster is currently selected -->
+                    <option value="{{ cluster.name }}" {% if cluster.name == cluster_name %}selected{% endif %}>
+                        {{ cluster.name }}
+                    </option>
+                {% empty %}
+                    <option value="">No clusters available</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+<br>
+<div class="log-container">
+    <div class="log-entry">
+
+        {% for line in logs %}
+            <span class="timestamp">-- {{ line }}</span>
+        {% empty %}
+            <p>No logs found for the selected cluster.</p>
+        {% endfor %}
+    </div>
+</div>
+{% include 'footer.html' %}
+</body>
+</html>

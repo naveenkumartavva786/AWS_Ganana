@@ -1,0 +1,20 @@
+gnore PyCharm IDE files
+.idea/
+
+# Ignore log files directory
+logs/
+
+# Ignore Python virtual environment
+venv/
+
+# Ignore SQLite database
+db.sqlite3
+__pycache__/
+*.pyc
+*.pyo
+env/
+venv/
+*.env
+*.log
+.DS_Store
+

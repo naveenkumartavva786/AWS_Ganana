@@ -1,0 +1,120 @@
+{% include 'header.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create VPC</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-check-input {
+            margin-left: -160px; /* Adjust the space between the checkbox and label as needed */
+        }
+        .form-check-label {
+            margin-left: -19px;
+        }
+        .success-message {
+        color: green;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    </style>
+</head>
+<body>
+    <h2 style="text-align: center; color:#45B08C;">Create VPC</h2>
+
+    {% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <p class="success-message">{{ message }}</p>
+        {% else %}
+            <p>{{ message }}</p>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+    <div><br>
+        <form method="post" action="{% url 'create_vpc' %}" style="width:50%;margin:auto;">
+            {% csrf_token %}
+
+            <!-- VPC Name Field -->
+            <div class="form-group">
+                <label for="vpc_name">VPC Name</label>
+                <input type="text" id="vpc_name" name="vpc_name" maxlength="50" placeholder="Enter VPC name" required>
+            </div>
+
+            <!-- VPC CIDR Block Field -->
+            <div class="form-group">
+                <label for="vpc_cidr_block">VPC CIDR Block</label>
+                <input type="text" id="vpc_cidr_block" name="vpc_cidr_block" maxlength="18" placeholder="e.g., 10.0.0.0/16" required>
+            </div>
+
+            <!-- First Subnet Name Field -->
+            <div class="form-group">
+                <label for="subnet_name_1">First Subnet Name</label>
+                <input type="text" id="subnet_name_1" name="subnet_name_1" maxlength="50" placeholder="Enter First Subnet name" required>
+            </div>
+
+            <!-- First Subnet CIDR Block Field -->
+            <div class="form-group">
+                <label for="subnet_cidr_block_1">First Subnet CIDR Block</label>
+                <input type="text" id="subnet_cidr_block_1" name="subnet_cidr_block_1" maxlength="18" placeholder="e.g., 10.0.1.0/24" required>
+            </div>
+
+            <!-- First Subnet Public/Private Checkbox -->
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="is_public_1" name="is_public_1">
+                <label class="form-check-label" for="is_public_1">Public Subnet</label>
+            </div>
+
+            <!-- Second Subnet Name Field -->
+            <div class="form-group">
+                <label for="subnet_name_2">Second Subnet Name</label>
+                <input type="text" id="subnet_name_2" name="subnet_name_2" maxlength="50" placeholder="Enter Second Subnet name" required>
+            </div>
+
+            <!-- Second Subnet CIDR Block Field -->
+            <div class="form-group">
+                <label for="subnet_cidr_block_2">Second Subnet CIDR Block</label>
+                <input type="text" id="subnet_cidr_block_2" name="subnet_cidr_block_2" maxlength="18" placeholder="e.g., 10.0.2.0/24" required>
+            </div>
+
+            <!-- Second Subnet Public/Private Checkbox -->
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="is_public_2" name="is_public_2">
+                <label class="form-check-label" for="is_public_2">Public Subnet</label>
+            </div>
+
+            <!-- AWS Region Dropdown -->
+            <div class="form-group">
+                <label for="region">AWS Region</label>
+                <select id="region" name="region" class="form-control" required>
+                    <option value="" disabled selected>Select a region</option>
+                    {% for region_code, region_name in region_choices %}
+                        <option value="{{ region_code }}">{{ region_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="background-color:#45B08C;border:#45B08C;">Create VPC</button>
+        </form>
+    </div>
+</body>
+</html>
+
+{% include 'footer.html' %}

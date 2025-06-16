@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cluster Details</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    {% include 'header.html' %}
+    <title>Cluster List</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Optional: Add CSS for styling -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+        h2, h3 {
+            color: #167da7;
+            margin-top: 20px;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Cluster Details</h2>
+
+    <h3>Basic Info</h3>
+    <table class="table table-bordered">
+        <tbody>
+            <tr><th>Cluster Name</th><td>{{ cluster.clustername }}</td></tr>
+            <tr><th>Region</th><td>{{ cluster.region }}</td></tr>
+            <tr><th>VPC</th><td>{{ cluster.vpc }}</td></tr>
+            <tr><th>Status</th><td>Running</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Compute Configuration</h3>
+    {% if compute %}
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Queue Name</th>
+                    <th>Compute Subnet</th>
+                    <th>Node Type</th>
+                    <th>Instance Type</th>
+                    <th>Min Count</th>
+                    <th>Max Count</th>
+                    <th>Volume Size (GiB)</th>
+                    <th>Volume Type</th>
+                    <th>EFA Enabled</th>
+                    <th>Compute Enabled</th>
+                    <th>User Script</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in compute %}
+                <tr>
+                    <td>{{ item.queue_name }}</td>
+                    <td>{{ item.compute_subnet }}</td>
+                    <td>{{ item.cmp_node_type }}</td>
+                    <td>{{ item.compute_node }}</td>
+                    <td>{{ item.cmp_min }}</td>
+                    <td>{{ item.cmp_max }}</td>
+                    <td>{{ item.cmp_volume_size }}</td>
+                    <td>{{ item.cmp_volume_type }}</td>
+                    <td>{{ item.efa }}</td>
+                    <td>{{ item.cmp_enable }}</td>
+                    <td>{{ item.cmp_script|default:"-" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No compute configuration available.</p>
+    {% endif %}
+
+
+
+        </table>
+
+
+    <a href="{% url 'cluster_list' %}" class="btn btn-secondary mt-3">Back to Cluster List</a>
+</div>
+</body>
+</html>

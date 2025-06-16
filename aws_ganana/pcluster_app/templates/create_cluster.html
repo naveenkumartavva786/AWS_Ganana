@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS Ganana</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+{% load static %}
+{% include 'header.html' %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="{% static 'js/ganana.js' %}"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css?family=Roboto');
+      body{
+      font-family: 'Roboto', sans-serif;
+      }
+      * {
+      margin: 0;
+      padding: 0;
+      }
+      i {
+      margin-right: 10px;
+      }
+      h4{
+      color:#45B08C;
+      }
+      /*------------------------*/
+      input:focus,
+      button:focus,
+      .form-control:focus{
+      outline: none;
+      box-shadow: none;
+      }
+      .form-control:disabled, .form-control[readonly]{
+      background-color: #fff;
+      }
+      /*----------step-wizard------------*/
+      .d-flex{
+      display: flex;
+      }
+      .justify-content-center{
+      justify-content: center;
+      }
+      .align-items-center{
+      align-items: center;
+      }
+      /*---------signup-step-------------*/
+      .bg-color{
+      background-color: #333;
+      }
+      .signup-step-container{
+      padding: 90px 0px;
+      padding-bottom: 60px;
+      }
+      .wizard .nav-tabs {
+      position: relative;
+      margin-bottom: 0;
+      border-bottom-color: transparent;
+      }
+      .wizard > div.wizard-inner {
+      position: relative;
+      margin-bottom: 50px;
+      text-align: center;
+      }
+      .connecting-line {
+      height: 2px;
+      background: #e0e0e0;
+      position: absolute;
+      width: 75%;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      top: 15px;
+      z-index: 1;
+      }
+      .wizard .nav-tabs > li.active > a, .wizard .nav-tabs > li.active > a:hover, .wizard .nav-tabs > li.active > a:focus {
+      color: #555555;
+      cursor: default;
+      border: 0;
+      border-bottom-color: transparent;
+      }
+      span.round-tab {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      display: inline-block;
+      border-radius: 50%;
+      background: #fff;
+      z-index: 2;
+      position: absolute;
+      left: 0;
+      text-align: center;
+      font-size: 16px;
+      color: #0e214b;
+      font-weight: 500;
+      border: 1px solid #ddd;
+      }
+      span.round-tab i{
+      color:#555555;
+      }
+      .wizard li.active span.round-tab {
+      background: #45B08C;
+      color: #fff;
+      border-color: #45B08C;
+      }
+      .wizard li.active span.round-tab i{
+      color: #5bc0de;
+      }
+      .wizard .nav-tabs > li.active > a i{
+      color: #0db02b;
+      }
+      .wizard .nav-tabs > li {
+      width: 25%;
+      }
+      .wizard li:after {
+      content: " ";
+      position: absolute;
+      left: 46%;
+      opacity: 0;
+      margin: 0 auto;
+      bottom: 0px;
+      border: 5px solid transparent;
+      border-bottom-color: red;
+      transition: 0.1s ease-in-out;
+      }
+      .wizard .nav-tabs > li a {
+      width: 30px;
+      height: 30px;
+      margin: 20px auto;
+      border-radius: 100%;
+      padding: 0;
+      background-color: transparent;
+      position: relative;
+      top: 0;
+      }
+      .wizard .nav-tabs > li a i{
+      position: absolute;
+      top: -15px;
+      font-style: normal;
+      font-weight: 400;
+      white-space: nowrap;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 12px;
+      font-weight: 700;
+      color: #000;
+      }
+      .wizard .nav-tabs > li a:hover {
+      background: transparent;
+      }
+      .wizard .tab-pane {
+      position: relative;
+      padding-top: 20px;
+      }
+      .wizard h3 {
+      margin-top: 0;
+      }
+      .prev-step{
+      font-size: 13px;
+      padding: 8px 24px;
+      border: none;
+      border-radius: 4px;
+      margin-top: 30px;
+      background-color:#608d9f;
+      color : #fff;
+      }
+      .next-step{
+      font-size: 13px;
+      padding: 8px 24px;
+      border: none;
+      border-radius: 4px;
+      margin-top: 30px;
+      }
+      .next-step{
+      background-color: #45B08C;
+      color : #fff;
+      }
+      .next-step1{
+      font-size: 13px;
+      padding: 8px 24px;
+      border: none;
+      border-radius: 4px;
+      margin-top: 30px;
+      }
+      .next-step1{
+      background-color: #45B08C;
+      color : #fff;
+      }
+      .skip-btn{
+      background-color: #cec12d;
+      color : #fff;
+      }
+      .step-head{
+      font-size: 20px;
+      text-align: center;
+      font-weight: 500;
+      margin-bottom: 20px;
+      }
+      .term-check{
+      font-size: 14px;
+      font-weight: 400;
+      }
+      .custom-file {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      height: 40px;
+      margin-bottom: 0;
+      }
+      .custom-file-input {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 40px;
+      margin: 0;
+      opacity: 0;
+      }
+      .custom-file-label {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 1;
+      height: 40px;
+      padding: .375rem .75rem;
+      font-weight: 400;
+      line-height: 2;
+      color: #495057;
+      background-color: #fff;
+      border: 1px solid #ced4da;
+      border-radius: .25rem;
+      }
+      .custom-file-label::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+      display: block;
+      height: 38px;
+      padding: .375rem .75rem;
+      line-height: 2;
+      color: #495057;
+      content: "Browse";
+      background-color: #e9ecef;
+      border-left: inherit;
+      border-radius: 0 .25rem .25rem 0;
+      }
+      .footer-link{
+      margin-top: 30px;
+      }
+      .all-info-container{
+      }
+      .list-content{
+      margin-bottom: 10px;
+      }
+      .list-content a{
+      padding: 10px 15px;
+      width: 100%;
+      display: inline-block;
+      background-color: #f5f5f5;
+      position: relative;
+      color: #565656;
+      font-weight: 400;
+      border-radius: 4px;
+      }
+      .list-content a[aria-expanded="true"] i{
+      transform: rotate(180deg);
+      }
+      .list-content a i{
+      text-align: right;
+      position: absolute;
+      top: 15px;
+      right: 10px;
+      transition: 0.5s;
+      }
+      .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+      background-color: #fdfdfd;
+      }
+      .list-box{
+      padding: 10px;
+      }
+      .signup-logo-header .logo_area{
+      width: 200px;
+      }
+      .signup-logo-header .nav > li{
+      padding: 0;
+      }
+      .signup-logo-header .header-flex{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      }
+      .list-inline li{
+      display: inline-block;
+      }
+      .pull-right{
+      float: right;
+      }
+      input[type="checkbox"]{
+      position: relative;
+      display: inline-block;
+      margin-right: 5px;
+      }
+      input[type="checkbox"]::before,
+      input[type="checkbox"]::after {
+      position: absolute;
+      content: "";
+      display: inline-block;
+      }
+      input[type="checkbox"]::before{
+      height: 16px;
+      width: 16px;
+      border: 1px solid #999;
+      left: 0px;
+      top: 0px;
+      background-color: #fff;
+      border-radius: 2px;
+      }
+      input[type="checkbox"]::after{
+      height: 5px;
+      width: 9px;
+      left: 4px;
+      top: 4px;
+      }
+      input[type="checkbox"]:checked::after{
+      content: "";
+      border-left: 1px solid #fff;
+      border-bottom: 1px solid #fff;
+      transform: rotate(-45deg);
+      }
+      input[type="checkbox"]:checked::before{
+      background-color: #18ba60;
+      border-color: #18ba60;
+      }
+      @media (max-width: 767px){
+      .sign-content h3{
+      font-size: 40px;
+      }
+      .wizard .nav-tabs > li a i{
+      display: none;
+      }
+      .signup-logo-header .navbar-toggle{
+      margin: 0;
+      margin-top: 8px;
+      }
+      .signup-logo-header .logo_area{
+      margin-top: 0;
+      }
+      .signup-logo-header .header-flex{
+      display: block;
+      }
+      }
+      .wizard,
+      .login-box {
+      margin: 0 auto; /* Center the wizard and form horizontally */
+      width: 100%; /* Make them take full width of the container */
+      }
+      #step-heading{
+      background-color:#45B08C;
+      color:#fff;
+      padding-top:5px;
+      margin-left:100px;
+      font-family: ui-sans-serif;
+      height: 40px;
+      }
+      .form-container {
+      display: none;
+      /*margin-top: 10px;*/
+      }
+      /* .multi-select {
+      position: relative;
+      display: inline-block;
+      }*/
+      .multi-select-checkboxes {
+      display: none;
+      border: 1px solid #ccc;
+      position: relative;
+      background-color: white;
+      z-index: 1;
+      width: 100%;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      }
+      .multi-select-checkboxes label {
+      display: block;
+      padding: 5px;
+      }
+      .multi-select:hover .multi-select-checkboxes {
+      display: block;
+      }
+      .hidden{
+      display: none;
+      }
+      .add-input1 {
+      padding: 8px;
+      width: 270px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+
+
+    <section class="signup-step-container">
+      <div class="container">
+        {% if messages %}
+    <div class="col-md-12">
+      {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+        <h4 id="step-heading" class="text-center col-md-10" style="">Cluster properties</h4>
+        <br>
+        <br>
+        <br>
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-12">
+            <div class="wizard">
+              <div class="wizard-inner">
+                <div class="connecting-line"></div>
+                <ul class="nav nav-tabs" role="tablist">
+                  <li role="presentation" class="active">
+                    <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" aria-expanded="true"><span class="round-tab">1 </span> <i>Cluster</i></a>
+                  </li>
+                  <li role="presentation" class="disabled">
+                    <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" aria-expanded="false"><span class="round-tab">2</span> <i>Head node</i></a>
+                  </li>
+                  <li role="presentation" class="disabled">
+                    <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab"><span class="round-tab">3</span> <i>Queues</i></a>
+                  </li>
+                  <li role="presentation" class="disabled">
+                    <a href="#step4" data-toggle="tab" aria-controls="step4" role="tab"><span class="round-tab">4</span> <i>Storage</i></a>
+                  </li>
+                </ul>
+              </div>
+              <div class="container" style="margin: 0 auto; width:900px;">
+                <form role="form" action="{% url 'parallel_cluster' %}" id="pclsuter_data" method="post" class="login-box">
+                  {% csrf_token %}
+                  <div class="tab-content" id="main_form">
+                    <div class="tab-pane active" role="tabpanel" id="step1">
+                      <h4 class="text-center" style="display:none;">Cluster properties</h4>
+                      <br>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Cluster Name *</label>
+                            <input class="form-control" type="text" name="name" placeholder=""  >
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Region *</label>
+                            <select name="city" class="form-control" id="regionSelect">
+                              <option value="">Select region</option>
+                              {% for region in regions %}
+                              <option value="{{ region }}">{{ region }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Operating system *</label>
+                            <select name="operating_system" class="form-control" id="os">
+                              <option value="" disabled selected>select type</option>
+                              <option value="alinux2">alinux2</option>
+                              <option value="centos7">centos7</option>
+                              <option value="ubuntu2004">ubuntu2004</option>
+                              <option value="ubuntu2204">ubuntu2204</option>
+                              <option value="rhel8">rhel8</option>
+                              <option value="rocky8">rocky8</option>
+                              <option value="rhel9">rhel9</option>
+                              <option value="rocky9">rocky9</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>VPC *</label>
+                            <select id="vpcSelect" name="vpc" class="form-control">
+                              <option value="" disabled selected>Select a VPC</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <ul class="list-inline pull-right">
+                        <li>
+                          <button type="button" class="default-btn next-step">Continue to next step</button>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="tab-pane" role="tabpanel" id="step2">
+                      <h4 class="text-center" style="display:none;">Head node</h4>
+                      <br>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Architecture *</label>
+                            <select name="archi" class="form-control" id="arch">
+                              <option value="" disabled selected>select architecture</option>
+                              <option value="x86_64">64-bit(x86)</option>
+                              <option value="arm64">64-bit(Arm)</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Instance type *</label>
+                            <select id="InstantTypeSelect" name="instant_type" class="form-control">
+                              <option value="" disabled selected>Select InstantType</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Subnet ID*</label>
+                            <select id="subnetSelect" name="head_subnet" class="form-control">
+                              <option value="" disabled selected>Select a Subnet</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Key Pair *</label>
+                            <select id="keypairSelect" name="key_pair" class="form-control">
+                              <option value="" disabled selected>Select a keypair</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Root volume size(GB)</label>
+                            <input class="form-control" type="text" name="head_volume_size" placeholder="">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Volume type</label>
+                            <select name="volume_type" class="form-control" id="head_vot">
+                              <option value="" disabled selected>select volume</option>
+                              <option value="gp3">General purpose SSD(gp3)</option>
+                              <option value="gp2">General purpose SSD(gp2)</option>
+                              <option value="io1">Provisioned IOPS SSD(io1)</option>
+                              <option value="io2">Provisioned IOPS SSD(io2)</option>
+                              <option value="standard">Magnetic(standard)</option>
+                            </select>
+                          </div>
+                        </div>
+<!--                        <div class="col-md-6">-->
+<!--                        <div class="form-group">-->
+<!--                        <input type="checkbox" id="node_start1" name="node_start1">-->
+<!--                        <label for="node_start1">Run script on node start</label>-->
+<!--                        </div>-->
+<!--                        <div id="add-form-arguments" class="form-arguments hidden">-->
+<!--                        <input type="text" class="add-input1" placeholder="/home/ec2-user/start.sh">-->
+<!--                        <button type="button" id="add-arguments1" class="btn btn-success" style="margin-left: 10px;">Add argument</button>-->
+<!--                        </div>-->
+<!--                        <div id="dynamic-forms-container" class="form-arguments">-->
+<!--                        </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-6">-->
+<!--                      <div class="form-group">-->
+<!--                      <input type="checkbox" id="node_configure1" name="node_configure1" value="true">-->
+<!--                      <label for="node_configure1">Run script on node configured</label>-->
+<!--                      </div>-->
+<!--                      <div id="add-form-configuration" class="form-configuration hidden">-->
+<!--                      <input type="text" id="add-input1" name="node_configure1_script" placeholder="/home/ec2-user/start.sh" class="add-input1">-->
+<!--                      <button type="button" id="add-configuration1" class="btn btn-success" style="margin-left: 10px;">Add argument</button>-->
+<!--                      </div>-->
+<!--                      <div id="dynamic_form_configuration" class="form-configuration">-->
+<!--                      &lt;!&ndash; Dynamic forms will be appended here &ndash;&gt;-->
+<!--                      </div>-->
+                      </div>
+<!--                      </div>-->
+
+                      <ul class="list-inline pull-right">
+                        <li>
+                          <button type="button" class="default-btn prev-step">Back</button>
+                        </li>
+                        <li>
+                          <button type="button" class="default-btn next-step skip-btn">Skip</button>
+                        </li>
+                        <li>
+                          <button type="button" class="default-btn next-step">Continue</button>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="tab-pane" role="tabpanel" id="step3">
+                      <h4 class="text-center" style="display:none;">Queues</h4>
+                      <!-- Existing content for the "Queues" tab -->
+                   <!--    <h4 class="text-center" style="display:none;">Queues</h4>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Queue Name *</label>
+                            <input class="form-control" type="text" name="queue_name" placeholder="">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Compute SubnetIDs *</label>
+                            <select id="subnetSelect1" name="compute_subnet" class="form-control">
+                              <option value="">Select a Subnet</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Compute Instant type *</label>
+                            <select id="InstantTypeSelect1" name="compute_node" class="form-control">
+                              <option value="" disabled selected>Select InstantType</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Scheduler *</label>
+                            <select id="schedulerSelect" name="min" class="form-control">
+                              <option value="" disabled selected>select scheduler</option>
+                              <option value="slurm">slurm</option>
+                              <option value="awsbatch">awsbatch</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Compute nodes min *</label>
+                            <select id="numberSelect" name="min" class="form-control">
+                              <option value="" disabled selected>select Nodes</option>
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+
+
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Compute nodes max *</label>
+                            <select id="numberSelect1" name="max" class="form-control">
+                              <option value="" disabled selected>select Nodes</option>
+                              <option value="1">1</option>
+                              <option value="2">2</option> -->
+                              <!-- Add more options as needed -->
+                            <!-- </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <input type="checkbox" id="node_start" name="node_start">
+                            <label for="node_start">Run script on node start</label>
+                          </div>
+                          <div id="add-form-arguments" class="form-arguments hidden">
+                            <input type="text" class="add-input1" placeholder="Input field">
+                            <button type="button" id="add-arguments" class="btn btn-success" style="margin-left: 10px;">Add argument</button>
+                          </div>
+                          <div id="dynamic-forms-container" class="form-arguments">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <input type="checkbox" id="node_configure" name="node_configure">
+                            <label for="node_configure">Run script on node configured</label>
+                          </div>
+                          <div id="add-form-configuration" class="form-configuration hidden">
+                            <input type="text" id="add-input1" placeholder="Input field" class="add-input1">
+                            <button type="button" id="add-configuration" class="btn btn-success" style="margin-left: 10px;">Add</button>
+                          </div>
+                          <div id="dynamic_form_configuration" class="form-configuration">
+                            Dynamic forms will be appended here
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="root_volume">Root volume size (GB)</label>
+                            <input type="text" id="root_volume" name="root_volume" class="form-control">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Volume type</label>
+                            <select name="volume_type" class="form-control" id="vt">
+                              <option value="" disabled selected>select volume</option>
+                              <option value="gp3">General purpose SSD(gp3)</option>
+                              <option value="gp2">General purpose SSD(gp2)</option>
+                              <option value="io1">Provisioned IOPS SSD(io1)</option>
+                              <option value="io2">Provisioned IOPS SSD(io2)</option>
+                              <option value="standard">Magnetic(standard)</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <input type="checkbox" id="encrypt_root_volume" name="encrypt_root_volume">
+                            <label for="encrypt_root_volume">Encrypt root volume</label>
+                          </div>
+                        </div>
+                      </div> -->
+                      <div class="row" id="multiInsertForm">
+                        <input class="queues_incrementer" type="hidden" name="queues_incrementer" value=1 >
+                      </div>
+                      <button id="addMore" type="button" class="btn btn-success" style="float:right;">Add More</button>
+                      <br>
+                      <br>
+                      <ul class="list-inline pull-right">
+                        <li>
+                          <button type="button" class="default-btn prev-step">Back</button>
+                        </li>
+                        <li>
+                          <button type="button" class="default-btn next-step skip-btn">Skip</button>
+                        </li>
+                        <li>
+                          <button type="button" class="default-btn next-step">Continue</button>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="tab-pane" role="tabpanel" id="step4">
+                      <h4 class="text-center" style="display:none;">Storage</h4>
+                      <br>
+                      <div class="row" id="main-form">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Storage type *</label>
+                            <div class="multi-select">
+                              <div class="selectBox" onclick="showCheckboxes()">
+                                <select class="form-control">
+                                  <option value="" disabled selected>select type</option>
+                                </select>
+                                <div class="overSelect"></div>
+                              </div><br>
+                              <div id="checkboxes" class="multi-select-checkboxes">
+                                <label for="FSX">
+                                <input type="checkbox" id="FSX" name="storage" value="form1" class="form-checkbox"> Amazon FSx for Lustre
+                                </label>
+<!--                                <label for="FSXN">-->
+<!--                                <input type="checkbox" id="FSXN" name="storage" value="form2" class="form-checkbox"> Amazon FSx for NetApp ONTAP-->
+<!--                                </label>-->
+<!--                                <label for="FSXO">-->
+<!--                                <input type="checkbox" id="FSXO" name="storage" value="form3" class="form-checkbox"> Amazon FSx for OpenZFS-->
+<!--                                </label>-->
+<!--                                <label for="AFC">-->
+<!--                                <input type="checkbox" id="AFC" name="storage" value="form4" class="form-checkbox"> Amazon File Cache-->
+<!--                                </label>-->
+                                <label for="EFS">
+                                <input type="checkbox" id="EFS" name="storage" value="form5" class="form-checkbox"> Amazon Elastic File System
+                                </label>
+                                <label for="EBS">
+                                <input type="checkbox" id="EBS" name="storage" value="form6" class="form-checkbox"> Amazon Elastic Block Store
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          </div>
+                          <div class="col-md-6">
+                          <button id="add-button" class="btn btn-success" type="button" disabled style="margin-top: 32px;">Add storage</button>
+                        </div>
+                          <div class="col-md-12" id="dynamic-forms">
+                            <!-- Dynamic forms will be appended here -->
+                          </div>
+                      </div>
+                      <ul class="list-inline pull-right">
+                        <li>
+                            <!-- Dry Run Button -->
+                            <button  type="button" value="dryrun" id="dryrun" class="default-btn next-step1 btn-warning" style="margin-right: 10px;">Dry Run</button>
+                        </li>
+
+                        <li>
+                          <button type="button" class="default-btn prev-step">Back</button>
+                        </li>
+                        <li>
+                          <button type="submit" name="action" value="submit" class="default-btn next-step1">Finish</button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div id="form1-template" class="form-container template" data-storage-id="FSX">
+                <h3>Amazon FSx for Lustre</h3>
+                <br>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="source_name">Shared source name</label>
+                      <input type="text" id="source_name" name="source_name" placeholder="StorageName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <label for="mount_path">Mount Path</label>
+                      <input type="text" id="mount_path" name="mount_path" value="/fsxlustre" class="form-control" readonly="readonly">
+                    </div>
+<!--                    <div class="form-group">-->
+<!--                      <input type="checkbox" id="external_file" class="external-file-checkbox" name="input3">-->
+<!--                      <label for="external_file">External File System</label>-->
+<!--                    </div>-->
+<!--                    <div class="form-group hidden selectBox">-->
+<!--                      <label>FSx Lustre Filesystem</label>-->
+<!--                      <select name="lustre_filesystem" class="form-control">-->
+<!--                        <option value="No Options">No Options</option>-->
+<!--                      </select>-->
+<!--                    </div>-->
+                    <div class="inputFields">
+                      <div class="form-group">
+                        <label for="fsx_luster">FSx for Luster</label>
+                        <select name="fsx_luster" id="fsx_luster" class="form-control">
+                          <option value="" disabled selected>Select type</option>
+                          <option value="PERSISTENT_2">PERSISTENT_2</option>
+                          <option value="PERSISTENT_1">PERSISTENT_1</option>
+                          <option value="SCRATCH_1">SCRATCH_1</option>
+                          <option value="SCRATCH_2">SCRATCH_2</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="storage_cap_gb">Storage Capacity(GB)</label>
+                        <input type="text" id="storage_cap_gb" name="storage_cap_gb" class="form-control">
+                      </div>
+                      <div class="form-group">
+                        <label for="storage_throughput_mb">Per unit storage throughput (MB/s/TiB)</label>
+                        <select name="storage_throughput_mb" id="storage_throughput_mb" class="form-control">
+                          <option value="" disabled selected>Select type</option>
+                          <option value="125">125</option>
+                          <option value="250">250</option>
+                          <option value="500">500</option>
+                          <option value="1000">1000</option>
+                        </select>
+                      </div>
+<!--                      <div class="form-group">-->
+<!--                        <input type="checkbox" id="compress_system" name="compress_system">-->
+<!--                        <label for="compress_system">Compress file System data</label>-->
+<!--                      </div>-->
+                      <div class="form-group">
+                        <label for="deletion_policy">Deletion policy</label>
+                        <select name="deletion_policy" id="deletion_policy" class="form-control">
+                          <option value="" disabled selected>Select type</option>
+                          <option value="Delete">Delete</option>
+                          <option value="Retain">Retain</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <button type="button" class="remove-button btn btn-danger mt-4" style="float: right;">Remove storage</button>
+                  </div>
+                </div>
+              </div>
+<!--              <div id="form2-template" class="form-container template" data-storage-id="FSXN">-->
+<!--                <h3>Amazon FSx for Netapp ONTAP(FSX)</h3>-->
+<!--                <br>-->
+<!--                <div class="row">-->
+<!--                  <div class="col-md-6">-->
+<!--                    <div class="form-group">-->
+<!--                      <label for="netapp_source">Shared source name</label>-->
+<!--                      <input type="text" id="netapp_source" name="netapp_source" placeholder="StorageName" class="form-control">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                      <label for="netapp_mountpath">Mount Path</label>-->
+<!--                      <input type="text" id="netapp_mountpath" name="netapp_mountpath" placeholder="/shared" class="form-control">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                      <label for="netapp_volume">FSx Netapp ONTAP volume</label>-->
+<!--                      <select  name="netapp_volume" id="netapp_volume" class="form-control" >-->
+<!--                        <option value="" disabled selected>Select a volume</option>-->
+<!--                      </select>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <div class="col-md-6">-->
+<!--                    <button type="button" class="remove-button btn btn-danger mt-4" style="float: right;">Remove storage</button>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div id="form3-template" class="form-container template" data-storage-id="FSXO">-->
+<!--                <h3>Amazon FSx for OpenZFS(FSX)</h3>-->
+<!--                <br>-->
+<!--                <div class="row">-->
+<!--                  <div class="col-md-6">-->
+<!--                    <div class="form-group">-->
+<!--                      <label for="openzfs_source">Shared source name</label>-->
+<!--                      <input type="text" id="openzfs_source" name="openzfs_source" placeholder="StorageName" class="form-control">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                      <label for="openzfs_mountpath">Mount Path</label>-->
+<!--                      <input type="text" id="openzfs_mountpath" placeholder="/shared" name="openzfs_mountpath" class="form-control">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                      <label for="openzfs_volume">FSx OpenZFS volume</label>-->
+<!--                      <select  name="openzfs_volume" id="openzfs_volume" class="form-control" >-->
+<!--                        <option value="" disabled selected>Select a volume</option>-->
+<!--                      </select>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <div class="col-md-6">-->
+<!--                    <button type="button" class="remove-button btn btn-danger mt-4" style="float: right;">Remove storage</button>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div id="form4-template" class="form-container template" data-storage-id="AFC">-->
+<!--                <h3>Amazon File Cache</h3>-->
+<!--                <br>-->
+<!--                <div class="row">-->
+<!--                  <div class="col-md-6">-->
+<!--                    <div class="form-group">-->
+<!--                      <label for="cache_source">Shared source name</label>-->
+<!--                      <input type="text" id="cache_source" name="cache_source" placeholder="StorageName" class="form-control">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                      <label for="cache_mountpath">Mount Path</label>-->
+<!--                      <input type="text" id="cache_mountpath" name="cache_mountpath" placeholder="/shared" class="form-control">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                      <label for="file_cache">Amzon File Cache</label>-->
+<!--                      <select name="file_cache" id="file_cache" class="form-control">-->
+<!--                        <option value="No Options">No Options</option>-->
+<!--                      </select>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <div class="col-md-6">-->
+<!--                    <button type="button" class="remove-button btn btn-danger mt-4" style="float: right;">Remove storage</button>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+              <div id="form5-template" class="form-container template" data-storage-id="EFS">
+                <h3>Amazon Elastic File System(EFS)</h3>
+                <br>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="efs_source">Shared source name</label>
+                      <input type="text" id="efs_source" name="efs_source" placeholder="StorageName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <label for="efs_mountpath">Mount Path</label>
+                      <input type="text" id="efs_mountpath" name="efs_mountpath" value="/efs" class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                      <input type="checkbox" id="efs_file" name="efs_file" class="efs-file-checkbox">
+                      <label for="efs_file">External File System</label>
+                    </div>
+                    <div class="form-group hidden selectBox11" id="selectBox11">
+                      <label>EFS Filesystem</label>
+                      <select name="efs_filesystem" class="form-control">
+                        <option value="No Options">No Options</option>
+                      </select>
+                    </div>
+                    <div id="inputFields2" class="inputFields2">
+                      <div class="form-group">
+                        <input type="checkbox" class="efs-encrypt-checkbox" name="efs_encrypt">
+                        <label>Encrypted</label>
+                      </div>
+                      <div id="inputField1" class="form-group hidden selectBox12">
+                        <input type="text" id="kms_id" name="kms_id" placeholder="KMS ID" class="form-control"><br>
+                      </div>
+                      <div class="form-group">
+                        <label for="perfo_mode">Performance mode</label>
+                        <select  name="perfo_mode" id="perfo_mode" class="form-control" >
+                          <option value="" disabled selected>Select type</option>
+                          <option value="generalPurpose">generalPurpose</option>
+                          <option value="maxIO">maxIO</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <input type="checkbox" class="efs-provision-checkbox" name="efs_provision">
+                        <label>Provisioned throughput (1-1024 in MiB/s)</label>
+                      </div>
+                      <div id="inputField3" class="form-group hidden selectBox13">
+                        <input type="text" name="throughput_value" placeholder="128" class="form-control"><br>
+                      </div>
+                      <div class="form-group">
+                        <label for="efs_deletion">Deletion policy</label>
+                        <select  name="efs_deletion" id="efs_deletion" class="form-control" >
+                          <option value="" disabled selected>Select type</option>
+                          <option value="Delete">Delete</option>
+                          <option value="Retain">Retain</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <button type="button" class="remove-button btn btn-danger mt-4" style="float: right;">Remove storage</button>
+                  </div>
+                </div>
+              </div>
+              <div id="form6-template" class="form-container template" data-storage-id="EBS">
+                <h3>Amazon Elastic Block Store (EBS)</h3>
+                <br>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="ebs_source">Shared source name</label>
+                      <input type="text" id="ebs_source" name="ebs_source" placeholder="StorageName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <label for="ebs_mountpath">Mount Path</label>
+                      <input type="text" id="ebs_mountpath" name="ebs_mountpath" value="/ebs" class="form-control" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                      <input type="checkbox" class="ebs-file-checkbox" name="ebs_file">
+                      <label>External File System</label>
+                    </div>
+                    <div class="form-group hidden selectBox14">
+                      <label for="ebs_id">EBS ID</label>
+                      <input type="text" id="ebs_id" name="ebs_id" class="form-control">
+                    </div>
+                    <div id="inputField4">
+                      <div class="form-group">
+                        <label for="ebs_volume_type">Volume type</label>
+                        <select name="ebs_volume_type" class="form-control" id="ebs_volume_type">
+                          <option value="" disabled selected>Select type</option>
+                          <option value="gp3">gp3</option>
+                          <option value="gp2">gp2</option>
+                          <option value="io1">io1</option>
+                          <option value="io2">io2</option>
+                          <option value="sc1">sc1</option>
+                          <option value="st1">st1</option>
+                          <option value="standard">standard</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="ebs_volume_size">Volume Size (35-2048 in GB)</label>
+                        <input type="number" id="ebs_volume_size" name="ebs_volume_size" class="form-control">
+                      </div>
+                      <div class="form-group">
+                        <input type="checkbox" class="ebs-encrypt-checkbox" name="ebs_encrypt">
+                        <label>Encrypted</label>
+                      </div>
+
+                      <div id="inputField5" class="form-group hidden selectBox15">
+                        <input type="text" id="input1" name="kms_id" placeholder="KMS ID" class="form-control"><br>
+                      </div>
+                      <div class="form-group">
+                        <input type="checkbox" class="ebs-snapshot-checkbox" name="ebs_snapshot">
+                        <label>Snapshot ID</label>
+                      </div>
+                      <div id="inputField6" class="form-group hidden selectBox16">
+                        <input type="text" name="snap_id" placeholder="snap-id" class="form-control">
+                      </div>
+                      <div class="form-group">
+                        <label for="ebs_deletion">Deletion policy</label>
+                        <select name="ebs_deletion" id="ebs_deletion" class="form-control">
+                          <option value="delete">Delete</option>
+                          <option value="Retain">Retain</option>
+                          <option value="Snapshot">Snapshot</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <button type="button" class="remove-button btn btn-danger mt-4" style="float: right;">Remove storage</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      $('.nav-tabs').on('click', 'li', function() {
+          var activeStep = $(this).find('a[data-toggle="tab"]').attr('href');
+          var headingText = $(activeStep).find('h4').text();
+          $('#step-heading').text(headingText);
+      });
+      // ------------step-wizard-------------
+      $(document).ready(function () {
+          $('.nav-tabs > li a[title]').tooltip();
+          //Wizard
+          $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+              var target = $(e.target);
+              if (target.parent().hasClass('disabled')) {
+                  return false;
+              }
+          });
+
+          $(".next-step").click(function (e) {
+              var active = $('.wizard .nav-tabs li.active');
+              active.next().removeClass('disabled');
+              nextTab(active);
+
+          });
+          $(".prev-step").click(function (e) {
+              var active = $('.wizard .nav-tabs li.active');
+              prevTab(active);
+          });
+
+      });
+
+      function nextTab(elem) {
+          $(elem).next().find('a[data-toggle="tab"]').click();
+      }
+      function prevTab(elem) {
+          $(elem).prev().find('a[data-toggle="tab"]').click();
+      }
+
+
+      $('.nav-tabs').on('click', 'li', function() {
+          $('.nav-tabs li.active').removeClass('active');
+          $(this).addClass('active');
+      });
+        $(document).ready(function() {
+      function updateButtonStates() {
+        var checkedCheckboxes = $('.form-checkbox:checked');
+        if (checkedCheckboxes.length > 0) {
+            $('#add-button').prop('disabled', false);
+        } else {
+            $('#add-button').prop('disabled', true);
+        }
+      }
+
+      $('.form-checkbox').change(updateButtonStates);
+
+      $('#add-button').click(function() {
+        $('.form-checkbox:checked').each(function() {
+            var formId = $(this).val();
+            var storageValue = $(this).parent().text().trim();
+            if (!$('#dynamic-forms').find('.form-container[data-storage-id="' + $(this).attr('id') + '"]').length) {
+                var template = $('#' + formId + '-template').clone().removeAttr('id').removeClass('template');
+                template.find('input, select').each(function() {
+                    var name = $(this).attr('name');
+                    if (!name.endsWith('[]')) {
+                        $(this).attr('name', name + '[]');
+                    }
+                });
+                template.appendTo('#dynamic-forms').show();
+                template.attr('data-storage-id', $(this).attr('id'));
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'selectedStorages[]',
+                    value: storageValue
+                }).appendTo('#main-form');
+            }
+        });
+
+        updateButtonStates();
+      });
+
+      $('#dynamic-forms').on('click', '.remove-button', function() {
+        var formContainer = $(this).closest('.form-container');
+        var storageId = formContainer.attr('data-storage-id');
+        var checkbox = $('#checkboxes input[id="' + storageId + '"]');
+        checkbox.prop('checked', false);
+        $('#main-form input[type="hidden"][value="' + checkbox.val() + '"]').remove();
+        formContainer.remove();
+
+        updateButtonStates();
+        if ($('.form-container:visible').length === 0) {
+            $('#add-button').prop('disabled', true);
+        }
+      });
+
+      $('#dynamic-forms').on('change', '.external-file-checkbox', function() {
+        var formContainer = $(this).closest('.form-container');
+        var selectBox = formContainer.find('.selectBox');
+        var inputFields = formContainer.find('.inputFields');
+        if ($(this).is(':checked')) {
+            selectBox.removeClass('hidden');
+            inputFields.addClass('hidden');
+        } else {
+            selectBox.addClass('hidden');
+            inputFields.removeClass('hidden');
+        }
+      });
+        $('#dynamic-forms').on('change', '.efs-file-checkbox', function() {
+        var formContainer = $(this).closest('.form-container');
+        var selectBox11 = formContainer.find('.selectBox11');
+        var inputFields2 = formContainer.find('.inputFields2');
+        if ($(this).is(':checked')) {
+            selectBox11.removeClass('hidden');
+            inputFields2.addClass('hidden');
+        } else {
+            selectBox11.addClass('hidden');
+            inputFields2.removeClass('hidden');
+        }
+      });
+      $('#dynamic-forms').on('change', '.efs-encrypt-checkbox', function() {
+            var formContainer = $(this).closest('.form-container');
+            var selectBox12 = formContainer.find('.selectBox12');
+            var inputField1 = formContainer.find('.inputField1');
+            if ($(this).is(':checked')) {
+                selectBox12.removeClass('hidden');
+                inputField1.addClass('hidden');
+            } else {
+                selectBox12.addClass('hidden');
+                inputField1.removeClass('hidden');
+            }
+        });
+
+      $('#dynamic-forms').on('change', '.efs-provision-checkbox', function() {
+            var formContainer = $(this).closest('.form-container');
+            var selectBox13 = formContainer.find('.selectBox13');
+            var inputField3 = formContainer.find('.inputField3');
+            if ($(this).is(':checked')) {
+                selectBox13.removeClass('hidden');
+                inputField3.addClass('hidden');
+            } else {
+                selectBox13.addClass('hidden');
+                inputField3.removeClass('hidden');
+            }
+        });
+
+       $(document).ready(function() {
+      $('#dynamic-forms').on('change', '.ebs-file-checkbox', function() {
+        var formContainer = $(this).closest('.form-group').nextAll();
+        var selectBox14 = formContainer.filter('.selectBox14');
+        var inputField4 = $('#inputField4');
+
+        if ($(this).is(':checked')) {
+            selectBox14.removeClass('hidden');
+            inputField4.addClass('hidden');
+        } else {
+            selectBox14.addClass('hidden');
+            inputField4.removeClass('hidden');
+        }
+      });
+
+      $('#dynamic-forms').on('change', '.ebs-encrypt-checkbox', function() {
+        var formContainer = $(this).closest('.form-group').nextAll();
+        var inputField5 = $('#inputField5');
+
+        if ($(this).is(':checked')) {
+            inputField5.removeClass('hidden');
+        } else {
+            inputField5.addClass('hidden');
+        }
+      });
+
+      $('#dynamic-forms').on('change', '.ebs-snapshot-checkbox', function() {
+        var formContainer = $(this).closest('.form-group').nextAll();
+        var inputField6 = $('#inputField6');
+
+        if ($(this).is(':checked')) {
+            inputField6.removeClass('hidden');
+        } else {
+            inputField6.addClass('hidden');
+        }
+      });
+      });
+
+      $('form').on('submit', function(event) {
+        // Remove empty fields
+        $(this).find('input[name$="[]"], select[name$="[]"]').each(function() {
+            if (!$(this).val()) {
+                $(this).remove();
+            }
+        });
+        // Remove form data associated with unchecked checkboxes
+        $('#checkboxes input.form-checkbox:not(:checked)').each(function() {
+            var formId = $(this).val();
+            $('#dynamic-forms .form-container[data-storage-id="' + $(this).attr('id') + '"]').remove();
+            $('#main-form input[type="hidden"][value="' + $(this).parent().text().trim() + '"]').remove();
+        });
+      });
+      // Empty fields not submit
+      $('form').on('submit', function(event) {
+        $('#checkboxes input.form-checkbox').each(function() {
+            var checkboxId = $(this).attr('id');
+            var formId = $(this).val();
+            var formContainer = $('#dynamic-forms .form-container[data-storage-id="' + checkboxId + '"]');
+            if (!$(this).is(':checked') && formContainer.is(':visible')) {
+                formContainer.hide();
+            }
+        });
+      });
+      });
+            //queue multi insert form
+  $(document).ready(function() {
+
+
+    function appendNewRow() {
+        let inc=parseInt($('.queues_incrementer').val());
+
+        var rowCount = $('.added-row').length;
+        var newRow = '<br><br><div class="row added-row">' +
+          '<div class="col-md-6">' +
+          '<div class="form-group">' +
+          '<label>Queue Name *</label>' +
+          '<input class="form-control" type="text" name="queue_name" placeholder="">' +
+          '</div>' +
+          '</div>' +
+          '<div class="col-md-6">' +
+          '<div class="form-group">' +
+
+          '<label>Compute SubnetIDs *</label>' +
+          '<select id="subnetSelect_' + inc + '" name="compute_subnet_' + inc + '" class="subnet-select form-control">' +
+          '<option value="">Select a Subnet</option>' +
+          '</select>' +
+          '</div>' +
+          '</div>' +
+          '<div class="col-md-6">' +
+          '<div class="form-group">' +
+          '<label>Compute Instance Categories *</label>' +
+          '<select class="form-control instance-category-select" id="instanceCategorySelect_' + inc + '"name="instanceCategorySelect_' + inc + '">' +
+          '<option value="" disabled selected>Select Instance Category</option>' +
+          '<option value="General Purpose">General Purpose</option>' +
+          '<option value="Compute Optimized">Compute Optimized</option>' +
+          '<option value="Memory Optimized">Memory Optimized</option>' +
+          '<option value="GPU Optimized">GPU Optimized</option>' +
+          '<option value="HPC Optimized">HPC Optimized</option>' +
+          ' </select>' +
+          '</div>' +
+          '</div>' +
+          '<div class="col-md-6">' +
+          '<div class="form-group">' +
+          '<label>Compute Instant type * <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" id="insta">info</button> </label>' +
+          '<select id="InstantTypeSelect_' + inc + '" name="compute_instant_' + inc + '" class="compute-select form-control">' +
+          '<option value="" disabled selected>Select InstantType</option>' +
+          '</select>' +
+          '</div>' +
+          '</div>' +
+          '<div class="col-md-6">' +
+          '<div class="form-group">' +
+          '<label>Scheduler *</label>' +
+          '<select id="schedulerSelect_' + inc + '" name="scheduler_' + inc + '" class="form-control">' +
+          '<option value="" disabled selected>select scheduler</option>' +
+          '<option value="slurm">slurm</option>' +
+          '<option value="awsbatch">awsbatch</option>' +
+          '</select>' +
+          '</div>' +
+          '</div>' +
+          '<div class="col-md-6">' +
+          '<div class="form-group">' +
+          '<label>Compute nodes min *</label>' +
+          '<select id="numberSelect_' + inc + '" name="cmp_min_' + inc + '" class="form-control">' +
+          '<option value="" disabled selected>select Nodes</option>' +
+          '<option value="0">0</option>' +
+          '<option value="1">1</option>' +
+          '<option value="2">2</option>' +
+          '</select>' +
+          '</div>' +
+          '</div>' +
+          '<div class="col-md-6">' +
+          '<div class="form-group">' +
+          '<label>Compute nodes max *</label>' +
+          '<select id="numberSelect1_' + inc + '" name="cmp_max_' + inc + '" class="form-control">' +
+          '<option value="" disabled selected>select Nodes</option>' +
+          '<option value="1">1</option>' +
+          '<option value="2">2</option>' +
+          '</select>' +
+          '</div>' +
+          '</div>'+
+<!--          '<div class="col-md-6">'+-->
+<!--          '<div class="form-group">'+-->
+<!--          '<input type="checkbox" class="node_start" name="node_start_' + inc + '">'+-->
+<!--          '<label for="node_start_' + inc + '">Run script on node start</label>'+-->
+<!--          '</div>'+-->
+<!--          '<div class="add-form-arguments hidden">'+-->
+<!--          '<input type="text" class="add-input1" placeholder="/home/ec2-user/start.sh">'+-->
+<!--          '<button type="button" class="add-arguments btn btn-success" style="margin-left: 10px;">Add argument</button>'+-->
+<!--          '</div>'+-->
+<!--          '<div class="dynamic-forms-container">'+-->
+<!--          '</div>'+-->
+<!--          '<div class="form-group">'+-->
+<!--          '<input type="checkbox" class="node_configure" name="node_configure_' + inc + '" value="true">'+-->
+<!--          '<label for="node_configure_' + inc + '">Run script on node configured</label>'+-->
+<!--          '</div>'+-->
+<!--          '<div class="add-form-configuration hidden">'+-->
+<!--          '<input type="text" id="add-input1_' + inc + '" name="node_configure_script_' + inc + '" class="add-input1" placeholder="/home/ec2-user/start.sh">'+-->
+<!--          '<button type="button" class="add-configuration btn btn-success" style="margin-left: 10px;">Add argument</button>'+-->
+<!--          '</div>'+-->
+<!--          '<div class="dynamic_form_configuration">'+-->
+<!--          '</div>'+-->
+<!--          '</div>'+-->
+          '<div class="col-md-6">'+
+          '<div class="form-group">'+
+          '<label for="root_volume">Root volume size (GB)</label>'+
+          '<input type="text" id="root_volume_' + inc + '" name="root_volume_' + inc + '" class="form-control">'+
+          '</div>'+
+          '</div>'+
+          '<div class="col-md-6">'+
+          '<div class="form-group">'+
+          '<label>Volume type</label>'+
+          '<select id="cmp_volume_type_' + inc + '" name="cmp_volume_type_' + inc + '" class="form-control" >'+
+          '<option value="" disabled selected>select volume</option>'+
+          '<option value="gp3">General purpose SSD(gp3)</option>'+
+          '<option value="gp2">General purpose SSD(gp2)</option>'+
+          '<option value="io1">Provisioned IOPS SSD(io1)</option>'+
+          '<option value="io2">Provisioned IOPS SSD(io2)</option>'+
+          '<option value="standard">Magnetic(standard)</option>'+
+          '</select>'+
+          '</div>'+
+          '</div>'+
+          '<div class="col-md-6">'+
+<!--          '<div class="form-group">'+-->
+<!--          '<input type="checkbox" id="encrypt_root_volume" name="encrypt_root_volume">'+-->
+<!--          '<label for="encrypt_root_volume">Encrypt root volume</label>'+-->
+<!--          '</div>'+-->
+          '</div>'+
+          '<div class="col-md-6">'+
+          '<div class="form-group efa">'+
+          '<input type="checkbox"  id="efaEnable_' + inc + '" name="efa_enable_' + inc + '" value="true">'+
+          '<label for="efaEnable_' + inc + '">Efa Network</label>'+
+          '</div>'+
+          '</div>';
+
+        // Append the new row to the form
+        $('#multiInsertForm').append(newRow);
+<!--        appendNewRow();-->
+
+
+          if (rowCount > 0) {
+             $('.added-row:last').append('<div class="col-md-6"><button type="button" class="btn btn-danger remove-row" style="float:right;margin-right: 15px; margin-bottom: 25px;">Remove</button></div>');
+            let lastSubnet = $('.added-row:last .subnet-select option:selected').val();
+            $('#subnetSelect_' + inc).val(lastSubnet);
+        }
+        // Add "Remove" button to new rows (not the first row)
+<!--        if (rowCount > 0) {-->
+<!--            $('.added-row:last').append('<div class="col-md-6"><button type="button" class="btn btn-danger remove-row" style="float:right;margin-right: 15px; margin-bottom: 25px;">Remove</button></div>');-->
+<!--        }-->
+    }
+
+      // Add initial row
+      appendNewRow();
+
+      $("#addMore").click(function() {
+       const head_node_subnet=$('#subnetSelect').val()
+
+
+        $('#vpcSelect').change();
+        let queue_incrementer=parseInt($('.queues_incrementer').val());
+<!--        alert(queue_incrementer);-->
+        $('.queues_incrementer').val(queue_incrementer+1);
+
+         appendNewRow();
+         setTimeout(function() {
+            //alert(head_node_subnet=='subnet-09f9163c978aecdb5')
+            $('#subnetSelect').val(head_node_subnet)
+          }, 3000);
+      });
+
+      $(document).on('click', '.remove-row', function() {
+        $(this).closest('.added-row').remove();
+        let queue_incrementer=parseInt($('.queues_incrementer').val());
+
+        $('.queues_incrementer').val(queue_incrementer-1);
+      });
+
+      // Function to handle checkbox change for node_start
+      function handleNodeStartChange(checkbox) {
+        var addFormContainer = checkbox.closest('.added-row').find('.add-form-arguments');
+        if (checkbox.is(':checked')) {
+          addFormContainer.removeClass('hidden');
+        } else {
+          addFormContainer.addClass('hidden');
+          checkbox.closest('.added-row').find('.dynamic-forms-container').empty();
+        }
+      }
+
+      // Function to handle checkbox change for node_configure
+      function handleNodeConfigureChange(checkbox) {
+        var addFormContainer = checkbox.closest('.added-row').find('.add-form-configuration');
+        if (checkbox.is(':checked')) {
+          addFormContainer.removeClass('hidden');
+        } else {
+          addFormContainer.addClass('hidden');
+          checkbox.closest('.added-row').find('.dynamic_form_configuration').empty();
+        }
+      }
+
+      // Event delegation for dynamically added rows
+      $(document).on('change', '.node_start', function() {
+        handleNodeStartChange($(this));
+      });
+
+      $(document).on('click', '.add-arguments', function() {
+        var dynamicFormsContainer = $(this).closest('.added-row').find('.dynamic-forms-container');
+        var newForm = $('<form>').addClass('dynamic-form');
+        var newInput = $('<input>').addClass('add-input1').attr({
+          type: 'text',
+          placeholder: 'Argument',
+          style: 'margin-bottom: 10px;',
+        });
+        var removeButton = $('<button>').addClass('remove-button1 btn btn-danger').attr({
+          type: 'button',
+          style: 'margin-left: 10px;',
+        }).text('Remove').on('click', function() {
+          $(this).parent().remove();
+        });
+
+        newForm.append(newInput, removeButton);
+        dynamicFormsContainer.append(newForm);
+      });
+
+      $(document).on('change', '.node_configure', function() {
+        handleNodeConfigureChange($(this));
+      });
+
+      $(document).on('click', '.add-configuration', function() {
+        var dynamicFormsContainer = $(this).closest('.added-row').find('.dynamic_form_configuration');
+        var newForm = $('<form>').addClass('dynamic-form');
+        var newInput = $('<input>').addClass('add-input1').attr({
+          type: 'text',
+          placeholder: 'Argument',
+          style: 'margin-bottom: 10px;',
+        });
+        var removeButton = $('<button>').addClass('remove-button1 btn btn-danger').attr({
+          type: 'button',
+          style: 'margin-left: 10px;',
+        }).text('Remove').on('click', function() {
+          $(this).parent().remove();
+        });
+
+        newForm.append(newInput, removeButton);
+        dynamicFormsContainer.append(newForm);
+      });
+
+      // Static checkboxes outside the form
+      $('#node_start_static').on('change', function() {
+        handleNodeStartChange($(this));
+      });
+
+      $('#node_configure_static').on('change', function() {
+        handleNodeConfigureChange($(this));
+      });
+<!--      $('#node_start1').on('change', function() {-->
+<!--                var addFormContainer = $('#add-form-arguments');-->
+<!--                if ($(this).is(':checked')) {-->
+<!--                    addFormContainer.removeClass('hidden');-->
+<!--                } else {-->
+<!--                    addFormContainer.addClass('hidden');-->
+<!--                    $('#dynamic-forms-container').empty();-->
+<!--                }-->
+<!--            });-->
+            $('#add-arguments1').on('click', function() {
+              var dynamicFormsContainer = $('#dynamic-forms-container');
+              var newForm = $('<form>').addClass('dynamic-form');
+              var newInput = $('<input>').addClass('add-input1').attr({
+                  type: 'text',
+                  placeholder: 'Input field',
+                  style: 'margin-bottom: 10px;',
+              });
+              var removeButton = $('<button>').addClass('remove-button1 btn btn-danger').attr({
+                  type: 'button',
+                  style: 'margin-left: 10px;',
+              }).text('Remove').on('click', function() {
+                  $(this).parent().remove();
+              });
+              newForm.append(newInput, removeButton);
+              dynamicFormsContainer.append(newForm);
+          });
+<!--            $('#node_configure1').on('change', function() {-->
+<!--                var addFormContainer = $('#add-form-configuration');-->
+<!--                if ($(this).is(':checked')) {-->
+<!--                    addFormContainer.removeClass('hidden');-->
+<!--                } else {-->
+<!--                    addFormContainer.addClass('hidden');-->
+<!--                    $('#dynamic_form_configuration').empty();-->
+<!--                }-->
+<!--            });-->
+            $('#add-configuration1').on('click', function() {
+                var dynamicFormsContainer = $('#dynamic_form_configuration');
+                var newForm = $('<form>').addClass('dynamic-form');
+                var newInput = $('<input>').addClass('add-input1').attr({
+                  type: 'text',
+                  placeholder: 'Input field',
+                  style: 'margin-bottom: 10px;',
+              });
+                var removeButton = $('<button>').addClass('remove-button1 btn btn-danger').attr({
+                  type: 'button',
+                  style: 'margin-left: 10px;',
+              }).text('Remove').on('click', function() {
+                  $(this).parent().remove();
+              });
+                newForm.append(newInput, removeButton);
+                dynamicFormsContainer.append(newForm);
+            });
+    });
+
+    </script>
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Instance Details</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body" id="navi">
+          Modal body..
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </body>
+</html>
+{% include 'footer.html' %}
